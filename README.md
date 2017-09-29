@@ -12,6 +12,9 @@ A real-time object recognition application using [Google's TensorFlow Object Det
     * Number of workers `--num-workers=2`
     * Size of the queue `--queue-size=5`
 
+## Quitting the program
+
+Just click on the video screen and type the key 'q'.
 
 ## Second access
 
