@@ -12,6 +12,17 @@ A real-time object recognition application using [Google's TensorFlow Object Det
     * Number of workers `--num-workers=2`
     * Size of the queue `--queue-size=5`
 
+
+## Second access
+
+If you want to use the program again, you don't have to use the firts commando conda env ....
+Just cd to the directory
+```
+cd object_detector_app
+source activate object-detection
+python object_detection_app.py
+```
+
 ## Tests
 ```
 pytest -vs utils/
