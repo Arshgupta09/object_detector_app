@@ -23,6 +23,14 @@ source activate object-detection
 python object_detection_app.py
 ```
 
+## Leave anaconda environment ##
+
+To leave the anaconda environment, just type the command:
+```
+source deactivate object-detection
+```
+
+
 ## Tests
 ```
 pytest -vs utils/
