@@ -12,7 +12,6 @@ dependencies:
 - libpng=1.6.27=0
 - libtiff=4.0.6=3
 - matplotlib=2.0.2=np113py35_0
-- menpo::tbb=4.3_20141023=0
 - mkl=2017.0.1=0
 - numpy=1.13.0=py35_0
 - olefile=0.44=py35_0
@@ -26,7 +25,6 @@ dependencies:
 - python=3.5.3=1
 - python-dateutil=2.6.1=py35_0
 - pytz=2017.2=py35_0
-- qt=5.6.2=2
 - readline=6.2=2
 - setuptools=27.2.0=py35_0
 - sip=4.18=py35_0
