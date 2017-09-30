@@ -33,22 +33,27 @@ To leave the anaconda environment, just type the command:
 source deactivate object-detection
 ```
 
-
 ## Tests
 ```
 pytest -vs utils/
 ```
 
 ## Requirements
-- [Anaconda / Python 3.5](https://www.continuum.io/downloads)
-- [TensorFlow 1.2](https://www.tensorflow.org/)
-- [OpenCV 3.0](http://opencv.org/)
+
+* Python 2.7
+* Git
+* You need to install Anaconda to run the programs shown here.
+* File [environment.yml](https://github.com/h3dema/object_detector_app/blob/master/environment.yml) lists all requirements to build the Anaconda environment.
+
+## object_detection ##
+
+The directory object_detection comes from https://github.com/tensorflow/models/tree/master/research/object_detection.
 
 ## Notes
+- This program was tested using Ubuntu 14 with OpenCV 3.3.
 - OpenCV 3.1 might crash on OSX after a while, so that's why I had to switch to version 3.0. See open issue and solution [here](https://github.com/opencv/opencv/issues/5874).
 - Moving the `.read()` part of the video stream in a multiple child processes did not work. However, it was possible to move it to a separate thread.
 
-## Copyright
+## Thanks
 
-See [LICENSE](LICENSE) for details.
-Copyright (c) 2017 [Dat Tran](http://www.dat-tran.com/).
+This repository comes from a fork from [Dat Tran](http://www.dat-tran.com/).
