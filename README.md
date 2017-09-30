@@ -49,6 +49,8 @@ pytest -vs utils/
 
 The directory object_detection comes from https://github.com/tensorflow/models/tree/master/research/object_detection.
 
+http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_coco_11_06_2017.tar.gz
+
 ## Notes
 - This program was tested using Ubuntu 14 with OpenCV 3.3.
 - OpenCV 3.1 might crash on OSX after a while, so that's why I had to switch to version 3.0. See open issue and solution [here](https://github.com/opencv/opencv/issues/5874).
