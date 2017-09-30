@@ -48,7 +48,7 @@ pytest -vs utils/
 ## object_detection ##
 
 The directory object_detection comes from https://github.com/tensorflow/models/tree/master/research/object_detection.
-
+Data used to https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
 http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_coco_11_06_2017.tar.gz
 
 ## Notes
