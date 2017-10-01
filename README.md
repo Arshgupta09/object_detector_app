@@ -3,11 +3,18 @@
 A real-time object recognition application using [Google's TensorFlow Object Detection API](https://github.com/tensorflow/models/tree/master/object_detection) and [OpenCV](http://opencv.org/).
 
 ## Getting Started
-1. `conda env create -f environment.yml`
+1. Copy the files
+```
+git clone https://github.com/h3dema/object_detector_app.git
+cd object_detector_app
+git submodules --init
+```
 
-2. `source activate object-detection`
+2. `conda env create -f environment.yml`
 
-3. `python object_detection_app.py`
+3. `source activate object-detection`
+
+4. `python object_detection_app.py`
     Optional arguments (default value):
     * Device index of the camera `--source=0`
     * Width of the frames in the video stream `--width=480`
@@ -34,11 +41,6 @@ python object_detection_app.py
 To leave the anaconda environment, just type the command:
 ```
 source deactivate
-```
-
-## Tests
-```
-pytest -vs utils/
 ```
 
 ## Requirements
