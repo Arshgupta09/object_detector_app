@@ -7,10 +7,15 @@ A real-time object recognition application using [Google's TensorFlow Object Det
 ```
 git clone https://github.com/h3dema/object_detector_app.git
 cd object_detector_app
-git submodules --init
+git submodules init
+git submodules update
 ```
 
-2. `conda env create -f environment.yml`
+2. Prepare the environment to run the application
+```
+conda env create -f environment.yml
+sudo apt-get install protobuf-compiler python-pil python-lxml
+```
 
 3. `source activate object-detection`
 
@@ -28,7 +33,7 @@ Just click on the video screen and type the key 'q'.
 
 ## Second access
 
-If you want to use the program again, you don't have to use the firts commando conda env ....
+If you want to use the program again, you don't have to use the commands 1 and 2 again
 Just cd to the directory
 ```
 cd object_detector_app
@@ -48,12 +53,22 @@ source deactivate
 * Python 2.7
 * sudo apt-get install git
 * sudo apt-get install protobuf-compiler
-* You need to install Anaconda to run the programs shown here.
+* You need to install Anaconda to run the programs shown here. Go to [conda installation](https://conda.io/docs/user-guide/install/index.html) do see how to install. Go to [downloads](https://www.anaconda.com/download/) to download Anaconda.
+```
+wget -c https://repo.continuum.io/archive/Anaconda2-5.0.0-Linux-x86_64.sh
+bash Anaconda2-5.0.0-Linux-x86_64.sh
+```
 * File [environment.yml](https://github.com/h3dema/object_detector_app/blob/master/environment.yml) lists all requirements to build the Anaconda environment.
 
-## object_detection ##
+## Uninstall ##
 
-The directory object_detection comes from https://github.com/tensorflow/models/tree/master/research/object_detection.
+```
+conda env remove object-detection
+rm -fr object-detection
+```
+
+## training data ##
+
 Data used to https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
 http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_coco_11_06_2017.tar.gz
 
