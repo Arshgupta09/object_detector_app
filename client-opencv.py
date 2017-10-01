@@ -25,7 +25,8 @@ if __name__ == '__main__':
         slow_fps = 1
     if fast_fps < slow_fps:
         fast_fps = slow_fps
-    interval = timedelta(0, slow_fps)
+    interval_slow = timedelta(0, 1 / float(slow_fps))
+    interval_fast = timedelta(0, 1 / float(fast_fps))
 
     video_capture = cv2.VideoCapture(0)
     video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, args.frame_width)
@@ -36,6 +37,7 @@ if __name__ == '__main__':
 
     print("Starting capture. Press <q> to Quit.")
     frame_id = 0
+    slow = True
     while True:
         t0 = datetime.now()
         _, frame = video_capture.read()
@@ -54,7 +56,10 @@ if __name__ == '__main__':
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
         frame_id += 1
-        time_to_sleep = (t0 + interval - datetime.now()).total_seconds()
+        if slow:
+            time_to_sleep = (t0 + interval_slow - datetime.now()).total_seconds()
+        else:
+            time_to_sleep = (t0 + interval_fast - datetime.now()).total_seconds()
         if time_to_sleep > 0:
             sleep(time_to_sleep)
 
