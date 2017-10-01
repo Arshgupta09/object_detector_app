@@ -1,12 +1,10 @@
-import socket
-from socket import error as socket_error
-import pickle as pickle
 import cv2
 import argparse
 from datetime import datetime, timedelta
 from time import sleep
 
-BUFF_SIZE = 6553600
+from multiprocessing.connection import Client
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')
@@ -17,6 +15,8 @@ if __name__ == '__main__':
     parser.add_argument('--frame-width', type=int, default=480, help='frame width')
     parser.add_argument('--frame-height', type=int, default=360, help='frame height')
     parser.add_argument('--show', type=bool, default=True, help='show frame')
+    parser.add_argument('--detect', nargs='+', type=str, default=['person'], help='what to detect.')
+    parser.add_argument('--threshold', type=float, default=0.51, help='what to detect.')
     args = parser.parse_args()
 
     slow_fps = args.slow_fps
@@ -32,33 +32,25 @@ if __name__ == '__main__':
     video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, args.frame_height)
 
     dest = (args.host, args.port)
-    tcp = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        tcp.connect(dest)
-    except socket_error:
-        print("Error connecting.")
-        import sys
-        sys.exit(1)
+    conn = Client(dest)
 
     print("Starting capture. Press <q> to Quit.")
     frame_id = 0
     while True:
         t0 = datetime.now()
         _, frame = video_capture.read()
-        # convert frame to sent via sockets to server
-        msg = pickle.dumps(frame, pickle.HIGHEST_PROTOCOL)
-        print('enviando para host (%s, %s)' % tuple(dest))
         # send message
-        tcp.send(msg)
-        print('msg enviada - frame %d' % (frame_id))
+        data = {'frame_id': frame_id, 'frame': frame}
+        conn.send(data)
         # receive message (frame tagged) from server
-        msg = tcp.recv(BUFF_SIZE)
-        print('mensagem recebida')
-        new_frame = pickle.loads(msg)
+        recv_data = conn.recv()
         # display image
-        if args.show:
-            cv2.imshow('Video', new_frame)
-
+        if args.show and 'frame' in recv_data:
+            cv2.imshow('Video', recv_data['frame'])
+        if 'detected' in recv_data:
+            detected = recv_data['detected']
+            if len(detected) > 0 and max(detected.values()) > args.threshold:
+                print("detected: %s" % str(detected))
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
         frame_id += 1
@@ -66,4 +58,4 @@ if __name__ == '__main__':
         if time_to_sleep > 0:
             sleep(time_to_sleep)
 
-    tcp.close()
+    conn.close()
