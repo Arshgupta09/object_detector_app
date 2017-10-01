@@ -4,7 +4,10 @@ A real-time object recognition application using [Google's TensorFlow Object Det
 
 ## Getting Started
 1. `conda env create -f environment.yml`
-2. `python object_detection_app.py` 
+
+2. `source activate object-detection`
+
+3. `python object_detection_app.py`
     Optional arguments (default value):
     * Device index of the camera `--source=0`
     * Width of the frames in the video stream `--width=480`
@@ -30,7 +33,7 @@ python object_detection_app.py
 
 To leave the anaconda environment, just type the command:
 ```
-source deactivate object-detection
+source deactivate
 ```
 
 ## Tests
@@ -41,7 +44,8 @@ pytest -vs utils/
 ## Requirements
 
 * Python 2.7
-* Git
+* sudo apt-get install git
+* sudo apt-get install protobuf-compiler
 * You need to install Anaconda to run the programs shown here.
 * File [environment.yml](https://github.com/h3dema/object_detector_app/blob/master/environment.yml) lists all requirements to build the Anaconda environment.
 

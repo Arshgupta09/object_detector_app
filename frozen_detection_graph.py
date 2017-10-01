@@ -1,3 +1,6 @@
+import os
+import sys
+
 # Path to frozen detection graph. This is the actual model that is used for the object detection.
 CWD_PATH = os.getcwd()
 MODEL_NAME = 'ssd_mobilenet_v1_coco_11_06_2017'
