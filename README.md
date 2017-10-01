@@ -51,8 +51,8 @@ source deactivate
 ## Requirements
 
 * Python 2.7
-* sudo apt-get install git
-* sudo apt-get install protobuf-compiler
+* git
+* protobuf-compiler
 * You need to install Anaconda to run the programs shown here. Go to [conda installation](https://conda.io/docs/user-guide/install/index.html) do see how to install. Go to [downloads](https://www.anaconda.com/download/) to download Anaconda.
 ```
 wget -c https://repo.continuum.io/archive/Anaconda2-5.0.0-Linux-x86_64.sh
@@ -67,10 +67,9 @@ conda env remove object-detection
 rm -fr object-detection
 ```
 
-## training data ##
+## Training Data ##
 
-Data used to https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md
-http://download.tensorflow.org/models/object_detection/ssd_mobilenet_v1_coco_11_06_2017.tar.gz
+Data used in this example can be found in https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md. We are using **ssd_mobilenet_v1_coco**.
 
 ## Notes
 - This program was tested using Ubuntu 14 with OpenCV 3.3.
