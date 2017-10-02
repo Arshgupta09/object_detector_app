@@ -44,7 +44,7 @@ def process_connections(input_q, conn, client_address):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')
-    parser.add_argument('--host', type=str, default='localhost', help='name or IP of the host that process the images')
+    parser.add_argument('--host', type=str, default='0.0.0.0', help='name or IP of the host that process the images')
     parser.add_argument('--port', type=int, default=5000, help='image processor server TCP port')
     parser.add_argument('--queue-size', type=int, default=5, help='Size of the queue.')
     parser.add_argument('--num-workers', type=int, default=2, help='Number of workers.')
@@ -56,7 +56,7 @@ if __name__ == '__main__':
     for w in args.detect:
         categories_to_detect.append(category_idx(w))
 
-    address = ('localhost', args.port)  # bind all addresses
+    address = (args.host, args.port)  # default bind all addresses
     listener = Listener(address)  # , authkey='secret password')
 
     input_q = Queue(maxsize=args.queue_size)

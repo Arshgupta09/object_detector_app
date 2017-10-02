@@ -45,8 +45,6 @@ def detect_objects(image_np, sess, detection_graph, categories_to_detect=[]):
         [boxes, scores, classes, num_detections],
         feed_dict={image_tensor: image_np_expanded})
 
-    print(scores)
-
     detected = dict()
     print(categories_to_detect)
     for i in categories_to_detect:
