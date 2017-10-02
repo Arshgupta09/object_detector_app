@@ -7,8 +7,8 @@ A real-time object recognition application using [Google's TensorFlow Object Det
 ```
 git clone https://github.com/h3dema/object_detector_app.git
 cd object_detector_app
-git submodules init
-git submodules update
+git submodule init
+git submodule update
 ```
 
 2. Prepare the environment to run the application
