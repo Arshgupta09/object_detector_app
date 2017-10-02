@@ -15,10 +15,9 @@ category_index = label_map_util.create_category_index(categories)
 
 
 def category_idx(category):
-    print(categories)
     __id = [c['id'] for c in categories if c['name'] == 'person']
     if __id is not None:
-        __id = __id[0]
+        __id = __id[0] - 1  # values are indexes from 0
     return __id
 
 
