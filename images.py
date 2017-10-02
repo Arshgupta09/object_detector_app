@@ -15,6 +15,7 @@ category_index = label_map_util.create_category_index(categories)
 
 
 def category_idx(category):
+    print(categories)
     __id = [c['id'] for c in categories if c['name'] == 'person']
     if __id is not None:
         __id = __id[0]
@@ -47,7 +48,9 @@ def detect_objects(image_np, sess, detection_graph, categories_to_detect=[]):
 
     detected = dict()
     for i in categories_to_detect:
-        detected[i] = scores[0][i]
+        detected[i] = 0
+        for j in range(len(scores)):
+            detected[i] = max(detected[i], scores[0][i])
 
     # Visualization of the results of a detection.
     vis_util.visualize_boxes_and_labels_on_image_array(
