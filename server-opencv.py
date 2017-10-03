@@ -47,7 +47,7 @@ if __name__ == '__main__':
     parser.add_argument('--host', type=str, default='0.0.0.0', help='name or IP of the host that process the images')
     parser.add_argument('--port', type=int, default=5000, help='image processor server TCP port')
     parser.add_argument('--queue-size', type=int, default=5, help='Size of the queue.')
-    parser.add_argument('--num-workers', type=int, default=2, help='Number of workers.')
+    parser.add_argument('--num-workers', type=int, default=4, help='Number of workers.')
     parser.add_argument('--detect', nargs='+', type=str, default=['person'], help='what to detect.')
     args = parser.parse_args()
 
