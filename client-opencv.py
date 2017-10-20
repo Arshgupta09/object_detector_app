@@ -16,10 +16,22 @@ from multiprocessing.connection import Client
 from common_utils import get_log_level
 import logging as logger
 
+
+def inform_ethanol(high, dest_ethanol):
+    """this method sends a message to dest_ethanol to inform waht throughput is expected"""
+    conn_ethanol = Client(dest_ethanol)
+    conn_ethanol.send(high)  # inform that high throughput is needed
+    log.info('Send to ethanol that throughput is %s' % 'high' if high else 'low')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')
     parser.add_argument('--host', type=str, default='192.168.1.100', help='name or IP of the host that process the images')
     parser.add_argument('--port', type=int, default=5000, help='image processor server TCP port')
+
+    parser.add_argument('--host-ethanol', type=str, default='192.168.1.100', help='name or IP of the host that process the images')
+    parser.add_argument('--port-ethanol', type=int, default=5000, help='image processor server TCP port')
+
     parser.add_argument('--low-fps', type=int, default=2, help='default FPS')
     parser.add_argument('--high-fps', type=int, default=20, help='FPS when event is detected')
     parser.add_argument('--high-period', type=int, default=30, help='high res period (in seconds)')
@@ -57,12 +69,13 @@ if __name__ == '__main__':
     video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, args.frame_height)
 
     dest = (args.host, args.port)
+    dest_ethanol = (args.host_ethanol, args.port_ethanol)
     conn = Client(dest)
 
     log.info("Starting capture - fps %d. Press <q> to Quit." % slow_fps)
     frame_id = 0
     slow = True
-    thigh = None
+    t_high = None
     while True:
         t0 = datetime.now()
         _, frame = video_capture.read()
@@ -83,19 +96,22 @@ if __name__ == '__main__':
             detected = recv_data['detected']
             if len(detected) > 0 and max(detected.values()) > args.threshold:
                 log.debug("detected: %s" % str(detected))
-                if thigh is None:
+                if t_high is None:
                     log.info('in high speed - fps %d - frame_id %d' % (fast_fps, frame_id))
                     filename = FILENAME_FORMAT % t0.strftime('%Y-%m-%dT%H-%M-%S')
                     cv2.imwrite(filename, image)
-                thigh = t0  # start high frame period
+                    # inform ethanol controller that a person was detected
+                    inform_ethanol(True, dest_ethanol)
+                t_high = t0  # start high frame period
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
         frame_id += 1
-        if thigh is not None:
-            if (thigh + period_highres) < datetime.now():
+        if t_high is not None:
+            if (t_high + period_highres) < datetime.now():
                 slow = True
-                thigh = None
+                t_high = None
                 log.info('returning to low speed - frame_id %d' % frame_id)
+                inform_ethanol(False, dest_ethanol)
             else:
                 slow = False
         if slow:
