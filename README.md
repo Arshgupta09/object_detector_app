@@ -3,6 +3,7 @@
 A real-time object recognition application using [Google's TensorFlow Object Detection API](https://github.com/tensorflow/models/tree/master/object_detection) and [OpenCV](http://opencv.org/).
 
 ## Getting Started
+
 1. Copy the files
 ```
 git clone https://github.com/h3dema/object_detector_app.git
@@ -26,6 +27,8 @@ sudo apt-get install protobuf-compiler python-pil python-lxml
     * Height of the frames in the video stream `--height=360`
     * Number of workers `--num-workers=2`
     * Size of the queue `--queue-size=5`
+
+Please note that our app uses Python version 3.
 
 ## Quitting the program
 

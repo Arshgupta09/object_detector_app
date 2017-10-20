@@ -1,3 +1,12 @@
+#
+#
+# to run this app:
+#
+# $ cd object_detector_app
+# $ source activate object-detection
+# $ python3 server-opencv.py
+#
+#
 import argparse
 from multiprocessing.connection import Listener
 from multiprocessing import Queue, Pool

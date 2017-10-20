@@ -1,3 +1,12 @@
+#
+#
+# to run this app, server-opencv.py must be running, otherwise you get a connection error
+# run the following commands:
+#
+# $ cd object_detector_app
+# $ source activate object-detection
+# $ python3 client-opencv.py
+#
 import cv2
 import argparse
 from datetime import datetime, timedelta
