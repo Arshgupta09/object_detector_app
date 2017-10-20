@@ -21,7 +21,7 @@ def get_log_level(level):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')
-    parser.add_argument('--host', type=str, default='localhost', help='name or IP of the host that process the images')
+    parser.add_argument('--host', type=str, default='192.168.1.100', help='name or IP of the host that process the images')
     parser.add_argument('--port', type=int, default=5000, help='image processor server TCP port')
     parser.add_argument('--low-fps', type=int, default=2, help='default FPS')
     parser.add_argument('--high-fps', type=int, default=20, help='FPS when event is detected')
@@ -71,9 +71,11 @@ if __name__ == '__main__':
         _, frame = video_capture.read()
         # send message
         data = {'frame_id': frame_id, 'frame': frame}
+        print("send")
         conn.send(data)
         # receive message (frame tagged) from server
         recv_data = conn.recv()
+        print("receive")
         # display image
         if 'frame' in recv_data:
             image = recv_data['frame']
