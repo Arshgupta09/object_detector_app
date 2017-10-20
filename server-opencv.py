@@ -38,6 +38,9 @@ def process_connections(input_q, conn, client_address):
             data = conn.recv()
             data_to_process = {'conn': conn, 'data': data}
             input_q.put(data_to_process)
+        except ValueError:
+            print("ValueError detected")
+            break
         except Exception:
             break
 
