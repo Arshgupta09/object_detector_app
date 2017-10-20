@@ -71,11 +71,12 @@ if __name__ == '__main__':
         _, frame = video_capture.read()
         # send message
         data = {'frame_id': frame_id, 'frame': frame}
-        print("send")
+        log.debug("Sending frame %d" % frame_id)
         conn.send(data)
+        log.debug("Sent frame %d" % frame_id)
         # receive message (frame tagged) from server
         recv_data = conn.recv()
-        print("receive")
+        log.debug("Received frame %d" % recv_data['frame_id'])
         # display image
         if 'frame' in recv_data:
             image = recv_data['frame']
