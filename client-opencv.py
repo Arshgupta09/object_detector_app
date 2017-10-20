@@ -4,20 +4,8 @@ from datetime import datetime, timedelta
 from time import sleep
 
 from multiprocessing.connection import Client
+from common_utils import get_log_level
 import logging as logger
-
-
-def get_log_level(level):
-    levels = {'CRITICAL': 50,
-              'ERROR': 40,
-              'WARNING': 30,
-              'INFO': 20,
-              'DEBUG': 10,
-              'NOTSET': 0,
-              }
-    level = level.upper()
-    return levels[level] if level in levels else 0
-
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')

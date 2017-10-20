@@ -7,6 +7,12 @@ from frozen_detection_graph import PATH_TO_CKPT
 from images import detect_objects
 from images import category_idx
 
+from common_utils import get_log_level
+import logging as logger
+FORMAT = '%(asctime)-15s %(message)s'
+logger.basicConfig(format=FORMAT)
+log = logger.getLogger('opencv-client')
+
 
 def worker(input_q, categories_to_detect):
     # Load a (frozen) Tensorflow model into memory.
@@ -36,10 +42,11 @@ def process_connections(input_q, conn, client_address):
     while True:
         try:
             data = conn.recv()
-            data_to_process = {'conn': conn, 'data': data}
+            log.debug("Received frame %d" % data['frame_id'] if 'frame_id' in data else -1)
+            data_to_process = {'conn': conn, 'data': data}  # note: connection is in data_to_process
             input_q.put(data_to_process)
         except ValueError:
-            print("ValueError detected")
+            log.info("ValueError detected - Probably you are not running the client or the server with python3")
             break
         except Exception:
             break
@@ -52,7 +59,10 @@ if __name__ == '__main__':
     parser.add_argument('--queue-size', type=int, default=5, help='Size of the queue.')
     parser.add_argument('--num-workers', type=int, default=4, help='Number of workers.')
     parser.add_argument('--detect', nargs='+', type=str, default=['person'], help='what to detect.')
+    parser.add_argument('--log-level', type=str, default="INFO", help='log level.')
     args = parser.parse_args()
+
+    log.setLevel(get_log_level(args.log_level))
 
     """what must be detected"""
     categories_to_detect = []
@@ -65,11 +75,11 @@ if __name__ == '__main__':
     input_q = Queue(maxsize=args.queue_size)
     pool = Pool(args.num_workers, worker, (input_q, categories_to_detect))
 
-    print('binding completed @ port %d' % args.port)
-    print('detecting: %s' % " ".join(args.detect))
+    log.info('binding completed @ port %d' % args.port)
+    log.info('detecting: %s' % " ".join(args.detect))
     while True:
         conn = listener.accept()
         client_address = listener.last_accepted  # client address
-        print('station %s connected' % client_address[0])
+        log.info('station %s connected' % client_address[0])
         process_connections(input_q, conn, client_address)
     listener.close()
