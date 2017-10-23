@@ -21,7 +21,7 @@ def inform_ethanol(high, dest_ethanol):
     """this method sends a message to dest_ethanol to inform waht throughput is expected"""
     conn_ethanol = Client(dest_ethanol)
     conn_ethanol.send(high)  # inform that high throughput is needed
-    log.info('Send to ethanol that throughput is %s' % 'high' if high else 'low')
+    log.info('Send to ethanol that throughput is %s' % ('high' if high else 'low'))
 
 
 if __name__ == '__main__':
