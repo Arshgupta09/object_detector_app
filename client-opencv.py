@@ -19,18 +19,27 @@ import logging as logger
 
 def inform_ethanol(high, dest_ethanol):
     """this method sends a message to dest_ethanol to inform waht throughput is expected"""
-    conn_ethanol = Client(dest_ethanol)
-    conn_ethanol.send(high)  # inform that high throughput is needed
-    log.info('Send to ethanol that throughput is %s' % ('high' if high else 'low'))
+    import pickle
+    import socket
+    conn_ethanol = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
+        conn_ethanol.connect(dest_ethanol)
+        obj = pickle.dumps(high, 0)
+        conn_ethanol.send(obj)  # inform that high throughput is needed
+        conn_ethanol.close()
+        log.info('Send to ethanol @ %s:%d that throughput is %s' % (dest_ethanol[0], dest_ethanol[1], 'high' if high else 'low'))
+    except ConnectionRefusedError:
+        log.info("Server is not up")
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Process some integers.')
+
     parser.add_argument('--host', type=str, default='192.168.1.100', help='name or IP of the host that process the images')
     parser.add_argument('--port', type=int, default=5000, help='image processor server TCP port')
 
-    parser.add_argument('--host-ethanol', type=str, default='192.168.1.100', help='name or IP of the host that process the images')
-    parser.add_argument('--port-ethanol', type=int, default=5000, help='image processor server TCP port')
+    parser.add_argument('--host-ethanol', type=str, default='150.164.10.52', help='name or IP of the host that process the images')
+    parser.add_argument('--port-ethanol', type=int, default=50000, help='image processor server TCP port')
 
     parser.add_argument('--low-fps', type=int, default=2, help='default FPS')
     parser.add_argument('--high-fps', type=int, default=20, help='FPS when event is detected')
