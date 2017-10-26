@@ -10,17 +10,20 @@
 import cv2
 import argparse
 from datetime import datetime, timedelta
-from time import sleep
+# from time import sleep
+from utils.app_utils import FPS
+from utils.app_utils import WebcamVideoStream
 
 from multiprocessing.connection import Client
 from common_utils import get_log_level
 import logging as logger
 
+import pickle
+import socket
+
 
 def inform_ethanol(high, dest_ethanol):
     """this method sends a message to dest_ethanol to inform waht throughput is expected"""
-    import pickle
-    import socket
     conn_ethanol = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         conn_ethanol.connect(dest_ethanol)
@@ -43,9 +46,13 @@ if __name__ == '__main__':
 
     parser.add_argument('--low-fps', type=int, default=2, help='default FPS')
     parser.add_argument('--high-fps', type=int, default=20, help='FPS when event is detected')
-    parser.add_argument('--high-period', type=int, default=30, help='high res period (in seconds)')
-    parser.add_argument('--frame-width', type=int, default=480, help='frame width')
-    parser.add_argument('--frame-height', type=int, default=360, help='frame height')
+    parser.add_argument('--high-period', type=int, default=30, help='high res period (in seconds) after a person is not detected anymore')
+
+    parser.add_argument('-src', '--source', dest='video_source', type=int,
+                        default=0, help='Device index of the camera.')
+    parser.add_argument('--frame-width', type=int, default=240, help='frame width')  # 480
+    parser.add_argument('--frame-height', type=int, default=180, help='frame height')  # 360
+
     parser.add_argument('--show', type=bool, default=True, help='show frame')
     parser.add_argument('--detect', nargs='+', type=str, default=['person'], help='what to detect.')
     parser.add_argument('--threshold', type=float, default=0.51, help='what to detect.')
@@ -73,21 +80,27 @@ if __name__ == '__main__':
     interval_highres = timedelta(0, 1 / float(fast_fps))
     period_highres = timedelta(0, args.high_period)
 
-    video_capture = cv2.VideoCapture(0)
-    video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, args.frame_width)
-    video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, args.frame_height)
+    # video_capture = cv2.VideoCapture(0)
+    # video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, args.frame_width)
+    # video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, args.frame_height)
+    video_capture = WebcamVideoStream(src=args.video_source,
+                                      width=args.frame_width,
+                                      height=args.frame_height).start()
 
     dest = (args.host, args.port)
     dest_ethanol = (args.host_ethanol, args.port_ethanol)
     conn = Client(dest)
 
     log.info("Starting capture - fps %d. Press <q> to Quit." % slow_fps)
+
     frame_id = 0
     slow = True
     t_high = None
+
+    fps = FPS().start()
     while True:
         t0 = datetime.now()
-        _, frame = video_capture.read()
+        frame = video_capture.read()
         # send message
         data = {'frame_id': frame_id, 'frame': frame}
         log.debug("Sending frame %d" % frame_id)
@@ -96,6 +109,7 @@ if __name__ == '__main__':
         # receive message (frame tagged) from server
         recv_data = conn.recv()
         log.debug("Received frame %d" % recv_data['frame_id'])
+        fps.update()
         # display image
         if 'frame' in recv_data:
             image = recv_data['frame']
@@ -127,7 +141,10 @@ if __name__ == '__main__':
             time_to_sleep = (t0 + interval_lowres - datetime.now()).total_seconds()
         else:
             time_to_sleep = (t0 + interval_highres - datetime.now()).total_seconds()
-        if time_to_sleep > 0:
-            sleep(time_to_sleep)
+        # if time_to_sleep > 0:
+        #     sleep(time_to_sleep)
 
     conn.close()
+    fps.stop()
+    print('[INFO] elapsed time (total): {:.2f}'.format(fps.elapsed()))
+    print('[INFO] approx. FPS: {:.2f}'.format(fps.fps()))
